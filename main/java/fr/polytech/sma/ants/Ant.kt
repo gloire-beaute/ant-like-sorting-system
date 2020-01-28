@@ -1,16 +1,26 @@
 package fr.polytech.sma.ants
 
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
 
 open class Ant(
+	private var _grid: Grid,
 	private var _id: UUID = UUID.randomUUID(),
-	private var _position: Position
-) : Element() {
+	private var _position: Position,
+	private var _food: Food?
+) : Element(), Runnable {
 	
 	companion object {
 		const val MEMORY_CAPACITY = 10
 	}
+	
+	private var thread: Thread? = null
+	private var threadBool: AtomicBoolean = AtomicBoolean(true)
+	
+	val grid: Grid
+		get() = _grid
 	
 	var id: UUID
 		get() = _id
@@ -62,6 +72,63 @@ open class Ant(
 	
 	//endregion
 	
+	//region FOOD METHODS
+	
+	fun isCarryingFood(): Boolean = _food != null
+	
+	@Deprecated("The instance of `Food` needs to be processed when exiting an Ant. This function doesn't do this process.", ReplaceWith("popFood()"))
+	fun getFood(): Food? = _food
+	
+	fun popFood(): Food? {
+		if (_food == null)
+			return null
+		
+		val food = Food(_food!!)
+		food.isCarriedByAnt = false
+		_food = null
+		return food
+	}
+	
+	@Deprecated("The instance of `Food` needs to be processed when entering an Ant. This function doesn't do this process.", ReplaceWith("carryFood()"))
+	fun setFood(food: Food?) {
+		_food = food
+	}
+	
+	fun carryFood(food: Food) {
+		if (_food != null)
+			throw IllegalStateException("The ant is already carrying food!\n\tFood being carried=$_food\n\tFood to carry=$food\n\tAgent=$this")
+		
+		food.isCarriedByAnt = true
+		_food = food
+	}
+	
+	//endregion
+	
+	//region THREAD METHODS
+	
+	fun start() {
+		if (thread == null || thread?.isAlive == true) {
+			thread = thread {
+				run()
+			}
+		}
+	}
+	fun stop() {
+		threadBool.set(false)
+		thread?.join(500)
+	}
+	
+	override fun run() {
+		threadBool.set(true)
+		var iter = 0
+		while (threadBool.get()) {
+			//
+			iter++
+		}
+	}
+	
+	//endregion
+	
 	//region OVERRIDES
 	
 	override fun equals(other: Any?): Boolean {
@@ -75,6 +142,10 @@ open class Ant(
 	
 	override fun hashCode(): Int {
 		return _position.hashCode()
+	}
+	
+	override fun toString(): String {
+		return "Ant(_grid=$_grid, _id=$_id, _position=$_position, _food=$_food, thread=$thread, threadBool=$threadBool, memory=$memory)"
 	}
 	
 	//endregion

@@ -46,7 +46,7 @@ class Grid(
         while (ants.map { a -> a.position }.contains(position)) {
             position = Position(Random.nextInt(width), Random.nextInt(height))
         }
-        val ant = Ant(UUID.randomUUID(), position)
+        val ant = Ant(this, UUID.randomUUID(), position)
         addAgent(ant)
         return ant
     }
