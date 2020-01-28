@@ -91,7 +91,7 @@ open class Ant(
 		if (_food == null)
 			return null
 		
-		val food = Food(_food!!)
+		val food = _food!!
 		food.isCarriedByAnt = false
 		food.position = this.position
 		_food = null
@@ -125,9 +125,9 @@ open class Ant(
 	 * is then saved in its memory.
 	 * @param saveInMemory If `true`, save the event in the memory (even if nothing was found). If `false`, don't change
 	 * the memory, and just return what's on the cell.
-	 * @return Return the detected element. If none were found, return `null`.
+	 * @return Return the detected food. If none were found, return `null`.
 	 */
-	fun detect(saveInMemory: Boolean = true): Element? {
+	fun detect(saveInMemory: Boolean = true): Food? {
 		val food: Food? = grid.getFoodAtPos(this.position)
 		
 		// Save event in memory if wanted
@@ -155,9 +155,30 @@ open class Ant(
 	
 	override fun run() {
 		threadBool.set(true)
-		var iter = 0
+		var iter = 0L
 		while (threadBool.get()) {
-			//
+			// Move randomly
+			var i = 0
+			while (i < Grid.MOVING_ABILITY)
+				if (move(Cardinal.pickRandomly(rand)))
+					i++
+			
+			// Detect what's on its cell
+			val possibleFood: Food? = detect()
+			
+			// If not carrying, check if it can take the food (if any)
+			if (!isCarryingFood()
+				// If there is food on its case, pick it up (random)
+				&& possibleFood != null && canTake(possibleFood))
+				carryFood(possibleFood)
+			// If carrying, check if we can drop the food
+			else if (isCarryingFood() &&
+				// Check if cell is empty
+				possibleFood == null &&
+				canDrop(_food!!))
+				popFood()
+			
+			//Thread.sleep(1000)
 			iter++
 		}
 	}
@@ -179,11 +200,13 @@ open class Ant(
 		val proba = rand.nextDouble()
 		return proba <= dropProbability(type)
 	}
+	fun canDrop(food: Food): Boolean = canDrop(food.type)
 	
 	fun canTake(type: Int): Boolean{
 		val proba = rand.nextDouble()
 		return proba <= takeProbability(type)
 	}
+	fun canTake(food: Food): Boolean = canTake(food.type)
 	
 	//endregion
 	

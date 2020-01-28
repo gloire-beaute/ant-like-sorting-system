@@ -1,5 +1,7 @@
 package fr.polytech.sma.ants
 
+import kotlin.random.Random
+
 enum class Cardinal(
 	val position: Position
 ) {
@@ -8,6 +10,15 @@ enum class Cardinal(
 	EAST(1, 0),
 	SOUTH(0, 1),
 	WEST(-1, 0);
+	
+	companion object {
+		fun pickRandomly(random: Random, exceptCenter: Boolean = true): Cardinal {
+			val list = ArrayList<Cardinal>(Cardinal.values().toList())
+			if (exceptCenter)
+				list.remove(CENTER)
+			return list[random.nextInt(0, list.size)]
+		}
+	}
 	
 	constructor(x: Int, y: Int) : this(Position(x, y))
 	
