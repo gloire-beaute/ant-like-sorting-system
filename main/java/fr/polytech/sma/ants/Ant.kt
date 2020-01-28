@@ -85,6 +85,7 @@ open class Ant(
 		
 		val food = Food(_food!!)
 		food.isCarriedByAnt = false
+		food.position = this.position
 		_food = null
 		return food
 	}
