@@ -5,7 +5,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
-import kotlin.math.max
+import kotlin.random.Random
 
 open class Ant(
 	private var _grid: Grid,
@@ -14,6 +14,7 @@ open class Ant(
 	private var _food: Food?
 ) : Element(), Runnable {
 	
+	private val rand : Random =  Random
 	companion object {
 		const val MEMORY_CAPACITY = 10
 	}
@@ -141,6 +142,16 @@ open class Ant(
 	fun dropProbability(type: Int): Double{
 		val f = getProportionOf(type)
 		return pow(f / (Grid.K_MINUS + f), 2.0)
+	}
+	
+	fun canDrop(type: Int): Boolean{
+		val proba = rand.nextDouble()
+		return proba <= dropProbability(type)
+	}
+	
+	fun canTake(type: Int): Boolean{
+		val proba = rand.nextDouble()
+		return proba <= takeProbability(type)
 	}
 	
 	//endregion
