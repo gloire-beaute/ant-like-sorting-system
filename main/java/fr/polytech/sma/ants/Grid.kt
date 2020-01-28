@@ -1,7 +1,5 @@
-import fr.polytech.sma.ants.Ant
-import fr.polytech.sma.ants.Element
-import fr.polytech.sma.ants.Food
-import fr.polytech.sma.ants.Position
+package fr.polytech.sma.ants
+
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.random.Random
@@ -29,6 +27,11 @@ class Grid(
         //add B food
         for (i in 0 until NB_B) {
             createFood(2)
+        }
+        
+        //add agents
+        for (i in 0 until NB_AGENTS) {
+            createAgent()
         }
     }
 
@@ -132,17 +135,30 @@ class Grid(
 
         return null
     }
+    
+    fun getFoodAtPos(x: Int, y: Int): Food? {
+        if (x < 0 || width <= x ||
+            y < 0 || height <= y
+        )
+            throw IndexOutOfBoundsException("($x, $y) is not valid (width=$width, height=$height)")
+
+        for (food in foods)
+            if (food.position.x == x && food.position.y == y)
+                return food
+
+        return null
+    }
 
     fun getAgent(index: Int): Ant {
         return ants[index]
     }
 
-    fun size(): Int {
-        return ants.size
+    fun getFood(index: Int): Food {
+        return foods[index]
     }
 
-    operator fun get(index: Int): Ant {
-        return getAgent(index)
+    fun size(): Int {
+        return ants.size
     }
 
     operator fun get(x: Int, y: Int): Ant? {
@@ -151,6 +167,28 @@ class Grid(
 
     override fun iterator(): Iterator<Ant> {
         return ants.iterator()
+    }
+
+    override fun toString(): String {
+        val content = StringBuilder()
+        for (y in 0 until width) {
+            for (x in 0 until height) {
+                var element : String
+                if(containAnt(x,y)) element = "🐜"
+                else if(containFood(x,y)){
+                    val food : Food? = getFoodAtPos(x,y)
+                    element = if(food!!.type == 0) "A" else "B"
+                }else element = " "
+                
+                content.append(' ')
+                    .append(element)
+                if (x+1 == height)
+                    content.append(' ')
+            }
+            content.append('\n')
+        }
+
+        return content.toString()
     }
 
 }
