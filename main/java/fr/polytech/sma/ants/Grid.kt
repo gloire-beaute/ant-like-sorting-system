@@ -13,13 +13,14 @@ class Grid(
         const val MOVING_ABILITY = 4
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
-        const val NB_AGENTS = 20
+        const val NB_AGENTS = 1
         const val NB_A = 200
         const val NB_B = 200
     }
 
     private val ants: ArrayList<Ant> = ArrayList()
     private val foods: ArrayList<Food> = ArrayList()
+    private var numberOfUpdate = 0
 
     init {
         //add A food
@@ -49,9 +50,13 @@ class Grid(
     }
 
     override fun update(o: Observable?, arg: Any?) {
-        if (o != null && o is Element) {
-            print()
-        }
+        numberOfUpdate++
+        print("\rNumber of update: $numberOfUpdate")
+//        if (o != null && o is Element && numberOfUpdate % 1000 == 0) {
+//            print("\n")
+//            System.out.flush()
+//            print()
+//        }
     }
 
     fun createAgent(): Ant {
@@ -110,7 +115,9 @@ class Grid(
     }
 
     fun canMoveAgent(ant: Ant, x: Int, y: Int): Boolean {
-        if (containAnt(x, y))
+        if (x < 0 || width <= x ||
+            y < 0 || height <= y ||
+            containAnt(x, y))
             return false
         return true
     }
