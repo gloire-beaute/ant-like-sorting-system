@@ -10,6 +10,9 @@ class Grid(
 ) : Observer, Iterable<Ant> {
 
     companion object {
+        const val MOVING_ABILITY = 1
+        const val K_PLUS = 0.1f
+        const val K_MINUS = 0.3f
         const val NB_AGENTS = 20
         const val NB_A = 200
         const val NB_B = 200
@@ -177,7 +180,7 @@ class Grid(
                 if(containAnt(x,y)) element = "🐜"
                 else if(containFood(x,y)){
                     val food : Food? = getFoodAtPos(x,y)
-                    element = if(food!!.type == 0) "A" else "B"
+                    element = if(food!!.type == 1) "A" else "B"
                 }else element = " "
                 
                 content.append(' ')
