@@ -10,7 +10,7 @@ class Grid(
 ) : Observer, Iterable<Ant> {
 
     companion object {
-        const val MOVING_ABILITY = 1
+        const val MOVING_ABILITY = 4
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
         const val NB_AGENTS = 20
@@ -92,7 +92,7 @@ class Grid(
 
         food.addObserver(this)
         foods.add(food)
-        return true;
+        return true
     }
 
     fun isEmpty(x: Int, y: Int): Boolean {
@@ -101,18 +101,12 @@ class Grid(
 
     fun containFood(x: Int, y: Int): Boolean {
         val position = Position(x, y)
-        if (foods.filter { f -> !f.isCarriedByAnt }.map { f -> f.position }.contains(position))
-            return true
-
-        return false
+        return foods.filter { f -> !f.isCarriedByAnt }.map { f -> f.position }.contains(position)
     }
 
     fun containAnt(x: Int, y: Int): Boolean {
         val position = Position(x, y)
-        if (ants.map { f -> f.position }.contains(position))
-            return true
-
-        return false
+        return (ants.map { f -> f.position }.contains(position))
     }
 
     fun canMoveAgent(ant: Ant, x: Int, y: Int): Boolean {
@@ -136,6 +130,16 @@ class Grid(
     }
     fun moveAgent(ant: Ant, newPosition: Position): Boolean {
         return moveAgent(ant, newPosition.x, newPosition.y)
+    }
+    
+    fun getAtPos(x: Int, y: Int): Element?{
+        val agent = getAgentAtPos(x,y)
+        val food = getFoodAtPos(x,y)
+        return when {
+            agent != null -> agent
+            food != null -> food
+            else -> null
+        }
     }
 
     fun getAgentAtPos(x: Int, y: Int): Ant? {
