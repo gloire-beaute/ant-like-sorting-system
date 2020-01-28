@@ -37,10 +37,20 @@ class Grid(
             createAgent()
         }
     }
+    
+    fun startAgents() {
+        for (agent in ants)
+            agent.start()
+    }
+    
+    fun stopAgents() {
+        for (agent in ants)
+            agent.stop()
+    }
 
     override fun update(o: Observable?, arg: Any?) {
         if (o != null && o is Element) {
-            //print changes
+            print()
         }
     }
 
@@ -49,7 +59,7 @@ class Grid(
         while (ants.map { a -> a.position }.contains(position)) {
             position = Position(Random.nextInt(width), Random.nextInt(height))
         }
-        val ant = Ant(this, UUID.randomUUID(), position)
+        val ant = Ant(this, UUID.randomUUID(), position, null)
         addAgent(ant)
         return ant
     }
@@ -91,7 +101,7 @@ class Grid(
 
     fun containFood(x: Int, y: Int): Boolean {
         val position = Position(x, y)
-        if (foods.map { f -> f.position }.contains(position))
+        if (foods.filter { f -> !f.isCarriedByAnt }.map { f -> f.position }.contains(position))
             return true
 
         return false
@@ -192,17 +202,22 @@ class Grid(
     override fun iterator(): Iterator<Ant> {
         return ants.iterator()
     }
+    
+    @Synchronized
+    fun print() {
+        println(this)
+    }
 
     override fun toString(): String {
         val content = StringBuilder()
         for (y in 0 until width) {
             for (x in 0 until height) {
                 var element : String
-                if(containAnt(x,y)) element = "🐜"
+                element = if(containAnt(x,y)) "🐜"
                 else if(containFood(x,y)){
                     val food : Food? = getFoodAtPos(x,y)
-                    element = if(food!!.type == 1) "A" else "B"
-                }else element = " "
+                    if(food!!.type == 1) "A" else "B"
+                }else " "
                 
                 content.append(' ')
                     .append(element)
