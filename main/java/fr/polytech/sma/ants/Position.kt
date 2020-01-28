@@ -30,14 +30,19 @@ class Position(
 	operator fun dec(): Position = Position(this.x-1, this.y-1)
 	
 	operator fun plus(position: Position): Position = Position(this.x + position.x, this.y + position.y)
+	operator fun plus(cardinal: Cardinal): Position = this + cardinal.position
 	
 	operator fun minus(position: Position): Position = Position(this.x - position.x, this.y - position.y)
+	operator fun minus(cardinal: Cardinal): Position = this - cardinal.position
 	
 	operator fun times(position: Position): Position = Position(this.x * position.x, this.y * position.y)
+	operator fun times(cardinal: Cardinal): Position = this * cardinal.position
 	
 	operator fun div(position: Position): Position = Position(this.x / position.x, this.y /position.y)
+	operator fun div(cardinal: Cardinal): Position = this/cardinal.position
 	
 	operator fun rem(position: Position): Position = Position(this.x % position.x, this.y % position.y)
+	operator fun rem(cardinal: Cardinal): Position = this % cardinal.position
 	
 	operator fun contains(pos: Int): Boolean = pos == x || pos == y
 	

@@ -121,16 +121,15 @@ class Grid(
         ant.position = Position(x, y)
         return true
     }
-
+    fun moveAgent(ant: Ant, cardinal: Cardinal): Boolean {
+        return moveAgent(ant, ant.position + cardinal)
+    }
     fun moveAgent(ant: Ant, newPosition: Position): Boolean {
         return moveAgent(ant, newPosition.x, newPosition.y)
     }
 
     fun getAgentAtPos(x: Int, y: Int): Ant? {
-        if (x < 0 || width <= x ||
-            y < 0 || height <= y
-        )
-            throw IndexOutOfBoundsException("($x, $y) is not valid (width=$width, height=$height)")
+        checkRange(x, y)
 
         for (ant in ants)
             if (ant.position.x == x && ant.position.y == y)
@@ -138,12 +137,10 @@ class Grid(
 
         return null
     }
+    fun getAgentAtPos(position: Position): Ant? = getAgentAtPos(position.x, position.y)
     
     fun getFoodAtPos(x: Int, y: Int): Food? {
-        if (x < 0 || width <= x ||
-            y < 0 || height <= y
-        )
-            throw IndexOutOfBoundsException("($x, $y) is not valid (width=$width, height=$height)")
+        checkRange(x, y)
 
         for (food in foods)
             if (food.position.x == x && food.position.y == y)
@@ -151,6 +148,7 @@ class Grid(
 
         return null
     }
+    fun getFoodAtPos(position: Position): Food? = getFoodAtPos(position.x, position.y)
 
     fun getAgent(index: Int): Ant {
         return ants[index]
@@ -164,9 +162,32 @@ class Grid(
         return ants.size
     }
 
-    operator fun get(x: Int, y: Int): Ant? {
-        return getAgentAtPos(x, y)
+    operator fun get(x: Int, y: Int): ArrayList<Element> {
+        checkRange(x, y)
+        
+        val elements = ArrayList<Element>()
+    
+        for (ant in ants)
+            if (ant.position.x == x && ant.position.y == y)
+                elements.add(ant)
+        
+        for (food in foods)
+            if (food.position.x == x && food.position.y == y)
+                elements.add(food)
+    
+        return elements
     }
+    operator fun get(position: Position): ArrayList<Element> = get(position.x, position.y)
+    operator fun get(pair: Pair<Int, Int>): ArrayList<Element> = get(pair.first, pair.second)
+    operator fun get(element: Element): ArrayList<Element> = get(element.position)
+    
+    private fun checkRange(x: Int, y: Int) {
+        if (x < 0 || width <= x ||
+            y < 0 || height <= y)
+            throw IndexOutOfBoundsException("($x, $y) is not valid (width=$width, height=$height)")
+    }
+    private fun checkRange(position: Position) = checkRange(position.x, position.y)
+    private fun checkRange(pair: Pair<Int, Int>) = checkRange(pair.first, pair.second)
 
     override fun iterator(): Iterator<Ant> {
         return ants.iterator()

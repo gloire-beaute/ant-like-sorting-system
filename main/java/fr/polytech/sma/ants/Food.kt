@@ -5,11 +5,7 @@ open class Food(
     private var _type: Int, // 1 == A, 2 == B
     private var _position: Position,
     private var _isCarriedByAnt: Boolean = false
-) : Element() {
-
-    var position: Position
-        get() = _position
-        set(value) { _position = value }
+) : Element(_position) {
 
     var type: Int
         get() = _type

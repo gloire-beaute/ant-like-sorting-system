@@ -9,8 +9,8 @@ open class Ant(
 	private var _grid: Grid,
 	private var _id: UUID = UUID.randomUUID(),
 	private var _position: Position,
-	private var _food: Food?
-) : Element(), Runnable {
+	private var _food: Food? = null
+) : Element(_position), Runnable {
 	
 	companion object {
 		const val MEMORY_CAPACITY = 10
@@ -26,10 +26,6 @@ open class Ant(
 		get() = _id
 		set(value) { _id = value }
 	
-	var position: Position
-		get() = _position
-		set(value) { _position = value }
-	
 	private val memory: ArrayList<Int> = ArrayList(MEMORY_CAPACITY)
 	
 	//region MEMORY METHODS
@@ -39,6 +35,15 @@ open class Ant(
 			memory.remove(0)
 		
 		memory.add(event ?: 0)
+	}
+	fun addMemory(food: Food?) {
+		if (food == null)
+			addMemory(0)
+		else {
+			if (food.type == 0)
+				throw NumberFormatException("Food \"$food\" has type ${food.type}, which is not valid.")
+			addMemory(food.type)
+		}
 	}
 	
 	fun getMemory(index: Int): Int = memory[index]
@@ -101,6 +106,32 @@ open class Ant(
 		
 		food.isCarriedByAnt = true
 		_food = food
+	}
+	
+	//endregion
+	
+	//region ACTIONS METHODS
+	
+	/**
+	 * Make ant moves if possible in the grid.
+	 */
+	fun move(cardinal: Cardinal): Boolean = grid.moveAgent(this, cardinal)
+	
+	/**
+	 * Detect what is on the same cell of the ant. Is there food or nothing? If it's food, what's its type? Any event
+	 * is then saved in its memory.
+	 * @param saveInMemory If `true`, save the event in the memory (even if nothing was found). If `false`, don't change
+	 * the memory, and just return what's on the cell.
+	 * @return Return the detected element. If none were found, return `null`.
+	 */
+	fun detect(saveInMemory: Boolean = true): Element? {
+		val food: Food? = grid.getFoodAtPos(this.position)
+		
+		// Save event in memory if wanted
+		if (saveInMemory)
+			addMemory(food)
+		
+		return food
 	}
 	
 	//endregion
