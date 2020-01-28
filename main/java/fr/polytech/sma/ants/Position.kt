@@ -48,6 +48,16 @@ class Position(
 		return if (i == 0) x else y
 	}
 	
+	operator fun set(i: Int, value: Int) {
+		if (i != 0 && i != 1)
+			throw IndexOutOfBoundsException("$i is not 0 or 1.")
+		
+		if (i == 0)
+			x = value
+		else
+			y = value
+	}
+	
 	operator fun plusAssign(position: Position) {
 		this.x += position.x
 		this.y += position.y

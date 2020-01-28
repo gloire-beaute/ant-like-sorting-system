@@ -2,7 +2,7 @@ package fr.polytech.sma.ants
 
 
 open class Food(
-    private var _type: Int, //0 == A, 1 == B
+    private var _type: Int, // 1 == A, 2 == B
     private var _position: Position
 ) : Element() {
 

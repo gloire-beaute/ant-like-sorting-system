@@ -23,12 +23,12 @@ class Grid(
     init {
         //add A food
         for (i in 0 until NB_A) {
-            createFood(0)
+            createFood(1)
         }
 
         //add B food
         for (i in 0 until NB_B) {
-            createFood(1)
+            createFood(2)
         }
     }
 
