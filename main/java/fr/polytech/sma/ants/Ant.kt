@@ -1,9 +1,11 @@
 package fr.polytech.sma.ants
 
+import java.lang.Math.pow
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
+import kotlin.math.max
 
 open class Ant(
 	private var _grid: Grid,
@@ -126,6 +128,19 @@ open class Ant(
 			//
 			iter++
 		}
+	}
+	
+	//endregion
+	
+	//region PROBABILITY METHODS
+	
+	fun takeProbability(type: Int): Double{
+		return pow(Grid.K_PLUS / (Grid.K_PLUS + getProportionOf(type)), 2.0)
+	}
+	
+	fun dropProbability(type: Int): Double{
+		val f = getProportionOf(type)
+		return pow(f / (Grid.K_MINUS + f), 2.0)
 	}
 	
 	//endregion

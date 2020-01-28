@@ -4,4 +4,6 @@ fun main() {
     val grid: Grid = Grid()
     
     println(grid.toString())
+    
+//    grid.startAgents()
 }
