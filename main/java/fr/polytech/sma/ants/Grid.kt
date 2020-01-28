@@ -180,7 +180,7 @@ class Grid(
                 if(containAnt(x,y)) element = "🐜"
                 else if(containFood(x,y)){
                     val food : Food? = getFoodAtPos(x,y)
-                    element = if(food!!.type == 0) "A" else "B"
+                    element = if(food!!.type == 1) "A" else "B"
                 }else element = " "
                 
                 content.append(' ')
