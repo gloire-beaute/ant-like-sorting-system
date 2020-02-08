@@ -8,13 +8,17 @@ fun main() {
     val grid: Grid = Grid()
     println(grid.toString())
     
-    grid.startAgents()
-    Timer().schedule(10000) {
-        grid.stopAgents()
-        Timer().schedule(1000) {
-            println("\nResult:")
-            println(grid.toString())
-            exitProcess(0)
-        }
-    }
+    // ASYNC
+//    grid.startAsyncAgents()
+//    Timer().schedule(10000) {
+//        grid.stopAsyncAgents()
+//        Timer().schedule(1000) {
+//            println("\nResult:")
+//            println(grid.toString())
+//            exitProcess(0)
+//        }
+//    }
+    
+    // SYNC
+    grid.startSyncAgents(1000)
 }
