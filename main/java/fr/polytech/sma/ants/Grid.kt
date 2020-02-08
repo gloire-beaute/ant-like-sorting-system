@@ -13,7 +13,7 @@ class Grid(
         const val MOVING_ABILITY = 4
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
-        const val NB_AGENTS = 1
+        const val NB_AGENTS = 10
         const val NB_A = 200
         const val NB_B = 200
     }

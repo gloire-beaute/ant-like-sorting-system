@@ -20,5 +20,7 @@ fun main() {
 //    }
     
     // SYNC
-    grid.startSyncAgents(1000)
+    grid.startSyncAgents(100000)
+    println("\nResult:")
+    println(grid.toString())
 }

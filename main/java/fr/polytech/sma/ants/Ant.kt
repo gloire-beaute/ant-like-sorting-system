@@ -35,7 +35,7 @@ open class Ant(
 	
 	fun addMemory(event: Int?) {
 		while (memory.size >= MEMORY_CAPACITY)
-			memory.remove(0)
+			memory.removeAt(0)
 		
 		memory.add(event ?: 0)
 	}
