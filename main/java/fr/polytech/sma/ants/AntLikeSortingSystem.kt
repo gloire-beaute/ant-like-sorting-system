@@ -5,12 +5,11 @@ import kotlin.concurrent.schedule
 import kotlin.system.exitProcess
 
 fun main() {
-    val grid: Grid = Grid()
-    println(grid.toString())
+    val grid = Grid()
     
     // ASYNC
     grid.startAsyncAgents()
-    Timer().schedule(10000) {
+    Timer().schedule(100000) {
         grid.stopAsyncAgents()
         Timer().schedule(1000) {
             println("\nResult:")

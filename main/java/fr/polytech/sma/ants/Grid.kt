@@ -10,7 +10,7 @@ class Grid(
 ) : Observer, Iterable<Ant> {
 
     companion object {
-        const val MOVING_ABILITY = 4
+        const val MOVING_ABILITY = 8
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
         const val NB_AGENTS = 10
@@ -21,7 +21,9 @@ class Grid(
     private val ants: ArrayList<Ant> = ArrayList()
     private val foods: ArrayList<Food> = ArrayList()
     private var numberOfUpdate = 0
+    private var printViewIterator = 0
     private val rand : Random =  Random(System.getenv("SEED")?.toLong() ?: System.currentTimeMillis())
+    private val view: View = View(width, height, this)
 
     init {
         //add A food
@@ -67,12 +69,12 @@ class Grid(
 
     override fun update(o: Observable?, arg: Any?) {
         numberOfUpdate++
+        printViewIterator++
         print("\rNumber of update: $numberOfUpdate")
-//        if (o != null && o is Element && numberOfUpdate % 1000 == 0) {
-//            print("\n")
-//            System.out.flush()
-//            print()
-//        }
+        if(printViewIterator >= 10000){
+            view.setChange()
+            printViewIterator = 0
+        }
     }
 
     fun createAgent(): Ant {
