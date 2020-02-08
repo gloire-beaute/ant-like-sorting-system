@@ -10,7 +10,7 @@ class Grid(
 ) : Observer, Iterable<Ant> {
 
     companion object {
-        const val MOVING_ABILITY = 8
+        const val MOVING_ABILITY = 5
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
         const val NB_AGENTS = 10
