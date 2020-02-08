@@ -12,7 +12,7 @@ enum class Cardinal(
 	WEST(-1, 0);
 	
 	companion object {
-		fun pickRandomly(random: Random, exceptCenter: Boolean = true): Cardinal {
+		fun pickRandomly(random: Random = Random, exceptCenter: Boolean = true): Cardinal {
 			val list = ArrayList<Cardinal>(Cardinal.values().toList())
 			if (exceptCenter)
 				list.remove(CENTER)

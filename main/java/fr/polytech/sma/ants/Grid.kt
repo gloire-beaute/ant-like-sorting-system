@@ -13,7 +13,7 @@ class Grid(
         const val MOVING_ABILITY = 4
         const val K_PLUS = 0.1f
         const val K_MINUS = 0.3f
-        const val NB_AGENTS = 1
+        const val NB_AGENTS = 10
         const val NB_A = 200
         const val NB_B = 200
     }
@@ -21,6 +21,7 @@ class Grid(
     private val ants: ArrayList<Ant> = ArrayList()
     private val foods: ArrayList<Food> = ArrayList()
     private var numberOfUpdate = 0
+    private val rand : Random =  Random(System.getenv("SEED")?.toLong() ?: System.currentTimeMillis())
 
     init {
         //add A food
@@ -39,14 +40,29 @@ class Grid(
         }
     }
     
-    fun startAgents() {
+    fun startAsyncAgents() {
         for (agent in ants)
             agent.start()
     }
     
-    fun stopAgents() {
+    fun stopAsyncAgents() {
         for (agent in ants)
             agent.stop()
+    }
+    
+    fun startSyncAgents(max_iterations: Int = 1000) {
+        for (i in 0 until max_iterations) {
+            for (agent in ants)
+                agent.act()
+        }
+    }
+    fun startSyncAgents(max_milliseconds: Long = 10000) {
+        val begin = System.currentTimeMillis();
+        val end = begin + max_milliseconds;
+        while (System.currentTimeMillis() < end) {
+            for (agent in ants)
+                agent.act()
+        }
     }
 
     override fun update(o: Observable?, arg: Any?) {
@@ -60,9 +76,9 @@ class Grid(
     }
 
     fun createAgent(): Ant {
-        var position = Position(Random.nextInt(width), Random.nextInt(height))
+        var position = Position(rand.nextInt(width), rand.nextInt(height))
         while (ants.map { a -> a.position }.contains(position)) {
-            position = Position(Random.nextInt(width), Random.nextInt(height))
+            position = Position(rand.nextInt(width), rand.nextInt(height))
         }
         val ant = Ant(this, UUID.randomUUID(), position, null)
         addAgent(ant)
@@ -70,9 +86,9 @@ class Grid(
     }
 
     fun createFood(type: Int): Food {
-        var position = Position(Random.nextInt(width), Random.nextInt(height))
+        var position = Position(rand.nextInt(width), rand.nextInt(height))
         while (foods.map { a -> a.position }.contains(position)) {
-            position = Position(Random.nextInt(width), Random.nextInt(height))
+            position = Position(rand.nextInt(width), rand.nextInt(height))
         }
 
         val food = Food(type, position)

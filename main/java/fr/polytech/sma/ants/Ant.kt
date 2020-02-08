@@ -14,7 +14,7 @@ open class Ant(
 	private var _food: Food? = null
 ) : Element(_position), Runnable {
 	
-	private val rand : Random =  Random
+	private val rand : Random =  Random(System.getenv("SEED")?.toLong() ?: System.currentTimeMillis())
 	companion object {
 		const val MEMORY_CAPACITY = 10
 	}
@@ -35,7 +35,7 @@ open class Ant(
 	
 	fun addMemory(event: Int?) {
 		while (memory.size >= MEMORY_CAPACITY)
-			memory.remove(0)
+			memory.removeAt(0)
 		
 		memory.add(event ?: 0)
 	}
@@ -141,6 +141,34 @@ open class Ant(
 	
 	//region THREAD METHODS
 	
+	/**
+	 * Make the ant act. This function is used in [run] (for asynchronous execution). If you want to execute the ant
+	 * as a synchronous entity, execute multiple times [act].
+	 * @see run
+	 */
+	fun act() {
+		// Move randomly
+		var i = 0
+		while (i < Grid.MOVING_ABILITY)
+			if (move(Cardinal.pickRandomly(rand)))
+				i++
+		
+		// Detect what's on its cell
+		val possibleFood: Food? = detect()
+		
+		// If not carrying, check if it can take the food (if any)
+		if (!isCarryingFood()
+			// If there is food on its case, pick it up (random)
+			&& possibleFood != null && canTake(possibleFood))
+			carryFood(possibleFood)
+		// If carrying, check if we can drop the food
+		else if (isCarryingFood() &&
+			// Check if cell is empty
+			possibleFood == null &&
+			canDrop(_food!!))
+			popFood()
+	}
+	
 	fun start() {
 		if (thread == null || thread?.isAlive == true) {
 			thread = thread {
@@ -153,30 +181,18 @@ open class Ant(
 		thread?.join(500)
 	}
 	
+	/**
+	 * Function to be called in the thread (for asynchronous behavior). This function calls [act] in a loop, until
+	 * [stop] is called. To start the thread, call [start].
+	 * @see act
+	 * @see start
+	 * @see stop
+	 */
 	override fun run() {
 		threadBool.set(true)
 		var iter = 0L
 		while (threadBool.get()) {
-			// Move randomly
-			var i = 0
-			while (i < Grid.MOVING_ABILITY)
-				if (move(Cardinal.pickRandomly(rand)))
-					i++
-			
-			// Detect what's on its cell
-			val possibleFood: Food? = detect()
-			
-			// If not carrying, check if it can take the food (if any)
-			if (!isCarryingFood()
-				// If there is food on its case, pick it up (random)
-				&& possibleFood != null && canTake(possibleFood))
-				carryFood(possibleFood)
-			// If carrying, check if we can drop the food
-			else if (isCarryingFood() &&
-				// Check if cell is empty
-				possibleFood == null &&
-				canDrop(_food!!))
-				popFood()
+			act()
 			
 			//Thread.sleep(1000)
 			iter++
