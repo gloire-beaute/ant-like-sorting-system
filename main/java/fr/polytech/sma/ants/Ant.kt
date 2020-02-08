@@ -16,7 +16,7 @@ open class Ant(
 	
 	private val rand : Random =  Random(System.getenv("SEED")?.toLong() ?: System.currentTimeMillis())
 	companion object {
-		const val MEMORY_CAPACITY = 10
+		const val MEMORY_CAPACITY = 20
 	}
 	
 	private var thread: Thread? = null

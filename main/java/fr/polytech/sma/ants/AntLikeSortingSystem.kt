@@ -9,18 +9,18 @@ fun main() {
     println(grid.toString())
     
     // ASYNC
-//    grid.startAsyncAgents()
-//    Timer().schedule(10000) {
-//        grid.stopAsyncAgents()
-//        Timer().schedule(1000) {
-//            println("\nResult:")
-//            println(grid.toString())
-//            exitProcess(0)
-//        }
-//    }
+    grid.startAsyncAgents()
+    Timer().schedule(10000) {
+        grid.stopAsyncAgents()
+        Timer().schedule(1000) {
+            println("\nResult:")
+            println(grid.toString())
+            exitProcess(0)
+        }
+    }
     
     // SYNC
-    grid.startSyncAgents(100000)
-    println("\nResult:")
-    println(grid.toString())
+//    grid.startSyncAgents(100000)
+//    println("\nResult:")
+//    println(grid.toString())
 }
