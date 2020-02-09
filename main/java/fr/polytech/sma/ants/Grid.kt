@@ -70,7 +70,7 @@ class Grid(
     override fun update(o: Observable?, arg: Any?) {
         numberOfUpdate++
         printViewIterator++
-        print("\rNumber of update: $numberOfUpdate")
+//        print("\rNumber of update: $numberOfUpdate")
         if(printViewIterator >= 10000){
             view.setChange()
             printViewIterator = 0
