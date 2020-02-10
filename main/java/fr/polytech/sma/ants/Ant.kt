@@ -5,6 +5,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
+import kotlin.math.pow
 import kotlin.random.Random
 
 open class Ant(
@@ -207,16 +208,14 @@ open class Ant(
 	
 	//region PROBABILITY METHODS
 	
-	fun takeProbability(type: Int): Double{
-		//		val f = getProportionOf(type)
-		val f = getProportionOfWithError(type)
-		return pow(Grid.K_PLUS / (Grid.K_PLUS + f), 2.0)
+	fun takeProbability(type: Int, withError: Boolean = true): Double{
+		val f = if (withError) getProportionOfWithError(type) else getProportionOf(type)
+		return (Grid.K_PLUS / (Grid.K_PLUS + f)).pow(2.0)
 	}
 	
-	fun dropProbability(type: Int): Double{
-//		val f = getProportionOf(type)
-		val f = getProportionOfWithError(type)
-		return pow(f / (Grid.K_MINUS + f), 2.0)
+	fun dropProbability(type: Int, withError: Boolean = true): Double{
+		val f = if (withError) getProportionOfWithError(type) else getProportionOf(type)
+		return (f / (Grid.K_MINUS + f)).pow(2.0)
 	}
 	
 	fun canDrop(type: Int): Boolean{

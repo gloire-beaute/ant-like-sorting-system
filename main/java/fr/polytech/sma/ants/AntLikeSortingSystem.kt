@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
     grid.startAsyncAgents()
     Timer().schedule(20000) {
         grid.stopAsyncAgents()
-        Timer().schedule(1000) {
+        Timer().schedule(10000) {
             println("\nResult:")
             println(grid.toString())
             exitProcess(0)

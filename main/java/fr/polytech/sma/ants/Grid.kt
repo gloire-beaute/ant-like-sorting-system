@@ -16,12 +16,11 @@ class Grid(
         const val NB_AGENTS = 10
         const val NB_A = 200
         const val NB_B = 200
-        const val DISCRIMINATION_ERR = 0.01
+        const val DISCRIMINATION_ERR = 0.8
     }
 
     private val ants: ArrayList<Ant> = ArrayList()
     private val foods: ArrayList<Food> = ArrayList()
-    private var numberOfUpdate = 0
     private var printViewIterator = 0
     private val rand : Random =  Random(System.getenv("SEED")?.toLong() ?: System.currentTimeMillis())
     private val view: View = View(width, height, this)
@@ -69,9 +68,7 @@ class Grid(
     }
 
     override fun update(o: Observable?, arg: Any?) {
-        numberOfUpdate++
         printViewIterator++
-//        print("\rNumber of update: $numberOfUpdate")
         if(printViewIterator >= 10000){
             view.setChange()
             printViewIterator = 0
