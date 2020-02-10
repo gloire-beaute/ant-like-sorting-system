@@ -70,6 +70,10 @@ open class Ant(
 	}
 	
 	fun getProportionOf(event: Int): Double = getNumberOf(event).toDouble()/memorySize().toDouble()
+	fun getProportionOfWithError(event: Int): Double{
+		val eventDual = if(event == 1) 2 else 1
+		return (getNumberOf(event).toDouble() + getNumberOf(eventDual).toDouble()*Grid.DISCRIMINATION_ERR) / memorySize().toDouble()
+	}
 	
 	operator fun contains(event: Int): Boolean = memory.contains(event)
 	
@@ -204,11 +208,14 @@ open class Ant(
 	//region PROBABILITY METHODS
 	
 	fun takeProbability(type: Int): Double{
-		return pow(Grid.K_PLUS / (Grid.K_PLUS + getProportionOf(type)), 2.0)
+		//		val f = getProportionOf(type)
+		val f = getProportionOfWithError(type)
+		return pow(Grid.K_PLUS / (Grid.K_PLUS + f), 2.0)
 	}
 	
 	fun dropProbability(type: Int): Double{
-		val f = getProportionOf(type)
+//		val f = getProportionOf(type)
+		val f = getProportionOfWithError(type)
 		return pow(f / (Grid.K_MINUS + f), 2.0)
 	}
 	
