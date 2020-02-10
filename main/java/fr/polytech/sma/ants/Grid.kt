@@ -16,7 +16,7 @@ class Grid(
         const val NB_AGENTS = 10
         const val NB_A = 200
         const val NB_B = 200
-        const val DISCRIMINATION_ERR = 0.8
+        const val DISCRIMINATION_ERR = 0.05
     }
 
     private val ants: ArrayList<Ant> = ArrayList()
